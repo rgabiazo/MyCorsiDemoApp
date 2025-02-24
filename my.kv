@@ -1,0 +1,337 @@
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
+<Label>:
+    # All Label widgets will use Helvetica by default
+    font_name: "Helvetica"
+
+<TouchTextInput>:
+    # All TouchTextInput widgets will use Helvetica by default
+    font_name: "Helvetica"
+
+<TouchButton>:
+    # All TouchButton (including DoneButton, ExitButton) uses Helvetica
+    font_name: "Helvetica"
+
+<CustomSpinner@TouchSpinner>:
+    font_name: "Helvetica"
+    background_normal: ''
+    background_active: ''
+    background_color: 0, 0, 0, 0  # let our canvas show through
+    color: (0,0,0,1)  # black text
+    canvas.before:
+        Color:
+            rgba: (0.94, 0.94, 0.96, 1)  # iOS-like gray
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]
+
+
+<PopupButton>:
+    background_normal: ''
+    background_down: ''
+    background_color: (0, 0, 0, 0)  # no background
+    canvas.before:
+        Color:
+            rgba: (0.56, 0.56, 0.58, 1)  # gray
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [20]   # Corner radius for the popup's buttons
+
+<ExitConfirmationPopup>:
+    size_hint: 0.45, 0.4
+    title: ''
+    separator_height: 0
+    background: ''
+    background_color: 0, 0, 0, 0
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [30]
+
+        padding: dp(20)
+        spacing: dp(20)
+
+        Label:
+            text: "Are you sure you want to exit?"
+            color: (0,0,0,1)
+            font_size: Window.width * 0.02  # or 0.04 if you want bigger text
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(10)
+
+            PopupButton:
+                text: "OK"
+                on_release: root.on_ok_pressed()
+
+            PopupButton:
+                text: "Cancel"
+                on_release: root.dismiss()
+
+<InstructionsPopup>:
+    size_hint: 0.9, 0.9
+    title: "Instructions"
+    separator_height: 0
+
+    # Disable the default popup background:
+    background: ''
+    background_color: 0, 0, 0, 0
+
+    # Instead, a child BoxLayout draws the white rounded background
+    BoxLayout:
+        id: instructions_box
+        orientation: 'vertical'
+        size_hint: 1, 1
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1   # white
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [30]      # corner radius
+
+<PracticeCompletePopup>:
+    size_hint: 0.6, 0.6
+    title: ""
+    separator_height: 0
+
+    # Disable the default rectangular background
+    background: ""
+    background_color: 0, 0, 0, 0
+
+    BoxLayout:
+        id: practice_box
+        orientation: "vertical"
+        size_hint: 1, 1
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1   # White
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [30]      # Adjust corner radius as as needed
+
+<BaseMessagePopup>:
+    # optional: if you want a default size
+    size_hint: 0.9, 0.9
+    title: ""
+    separator_height: 0
+
+    # Remove default popup background
+    background: ""
+    background_color: 0, 0, 0, 0
+
+    BoxLayout:
+        id: main_box
+        orientation: "vertical"
+        size_hint: 1, 1
+        padding: dp(20)  # optional
+        spacing: dp(10)  # optional
+
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [30]  # bigger radius for obvious corners
+<ExitButton>:
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: 0.56, 0.56, 0.58, 1   # or another gray color you prefer
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12]               # the corner rounding
+
+<DoneButton>:
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: 0.56, 0.56, 0.58, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12]
+
+<-RoundedTouchTextInput@TouchTextInput>:
+    background_color: (1, 1, 1, 1)
+    hint_text_color: (0, 0, 0, 0.5)
+    foreground_color: (0, 0, 0, 1)
+    cursor_color: (0, 0, 0, 1)
+    cursor_width: 2
+
+    canvas.before:
+        # Rounded rectangle background
+        Color:
+            rgba: self.background_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]
+
+        # The blinking cursor
+        Color:
+            rgba: (self.cursor_color if self.focus and not self._cursor_blink and int(self.x + self.padding[0]) <= self._cursor_visual_pos[0] <= int(self.x + self.width - self.padding[2]) else (0, 0, 0, 0))
+        Rectangle:
+            pos: self._cursor_visual_pos
+            size: (self.cursor_width, -self._cursor_visual_height)
+
+        # Foreground text color
+        Color:
+            rgba: (self.disabled_foreground_color if self.disabled else (self.hint_text_color if not self.text else self.foreground_color))
+
+
+WindowManager:
+    MainWindow:
+    ReadyWindow:
+    SecondWindow:
+
+<MainWindow>:
+    name: "main"
+
+    FloatLayout:
+        # Main Container Layout
+        FloatLayout:
+            size: root.width, root.height * 0.9
+            pos_hint: {'top': 1}
+
+            # "Enter Participant Info" Label
+            Label:
+                text: "Enter Participant Info"
+                size_hint: 0.8, 0.1
+                pos_hint: {"center_x": 0.5, "top": 0.95}
+                font_size: Window.width * 0.03
+
+            # Participant ID
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: 0.8, 0.1
+                pos_hint: {"center_x": 0.5, "top": 0.8}
+                spacing: 10
+
+                Label:
+                    text: "Participant ID:"
+                    size_hint_x: 0.3
+                    font_size: Window.width * 0.02
+
+                RoundedTouchTextInput:
+                    id: participantID
+                    multiline: False
+                    font_size: Window.width * 0.05
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
+
+            # Session Name
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: 0.8, 0.1
+                pos_hint: {"center_x": 0.5, "top": 0.65}
+                spacing: 10
+
+                Label:
+                    text: "Session Name:"
+                    size_hint_x: 0.3
+                    font_size: Window.width * 0.02
+
+                RoundedTouchTextInput:
+                    id: session_name
+                    multiline: False
+                    font_size: Window.width * 0.05
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
+
+            # Session Type
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: 0.8, 0.1
+                pos_hint: {"center_x": 0.5, "top": 0.5}
+                spacing: 10
+
+                Label:
+                    text: "Session Type:"
+                    size_hint_x: 0.3
+                    font_size: Window.width * 0.02
+
+                CustomSpinner:
+                    id: session_type_spinner
+                    text: 'Select Session Type'
+                    values: ['Corsi Task']
+                    font_size: Window.width * 0.02
+
+        # Button Layout
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 0.4, 0.2
+            pos_hint: {"center_x": 0.5, "center_y": 0.25}
+            spacing: 20
+
+            DoneButton:
+                text: "Done"
+                size_hint_y: 0.6
+                font_size: Window.width * 0.025
+                on_release:
+                    root.validate_and_proceed()
+                # Rounded corners + "Vulcanized" grey
+                background_normal: ''
+                background_down: ''
+                background_color: (0, 0, 0, 0)
+                canvas.before:
+                    Color:
+                        # Apple-like grey ~ #8E8E93
+                        rgba: (0.56, 0.56, 0.58, 1)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [12]
+
+            ExitButton:
+                text: "Exit"
+                size_hint_y: 0.4
+                font_size: Window.width * 0.025
+                on_release:
+                    root.show_exit_popup()
+                background_normal: ''
+                background_down: ''
+                background_color: (0, 0, 0, 0)
+                canvas.before:
+                    Color:
+                        rgba: (0.56, 0.56, 0.58, 1)  # same grey
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [12]
+
+
+<ReadyWindow>:
+    name: "ready"
+    FloatLayout:
+        Label:
+            text: "Ready"
+            font_size: Window.width * 0.05
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+<SecondWindow>:
+    name: "second"
+    # No need to add widgets here; they're added programmatically in main.py
