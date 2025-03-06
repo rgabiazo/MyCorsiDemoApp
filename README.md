@@ -62,6 +62,7 @@ MyCorsiDemoApp/
 ├── AppIcon.appiconset/
 │   └── (... your icon images in various iOS-required resolutions ...)
 ├── corsi_icon.png
+├── requirements.txt
 └── README.md
 </pre>
 
